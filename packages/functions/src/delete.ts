@@ -2,10 +2,11 @@ import { Resource } from "sst";
 import { handler } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DeleteCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 const dynamoDb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-export const main = handler(async (event) => {
+async function deleteNote(event: APIGatewayProxyEvent) {
 	const params = {
 		TableName: Resource.Notes.name,
 		Key: {
@@ -17,4 +18,6 @@ export const main = handler(async (event) => {
 	await dynamoDb.send(new DeleteCommand(params));
 
 	return JSON.stringify({ status: true });
-});
+}
+
+export const main = handler(deleteNote);

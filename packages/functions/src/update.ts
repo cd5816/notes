@@ -2,10 +2,11 @@ import { Resource } from "sst";
 import { handler } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { APIGatewayEvent } from "aws-lambda";
 
 const dynamoDb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-export const main = handler(async (event) => {
+async function updateNote(event: APIGatewayEvent) {
 	const data = JSON.parse(event.body || "{}");
 
 	const params = {
@@ -27,4 +28,6 @@ export const main = handler(async (event) => {
 	await dynamoDb.send(new UpdateCommand(params));
 
 	return JSON.stringify({ status: true });
-});
+}
+
+export const main = handler(updateNote);

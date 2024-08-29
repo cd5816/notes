@@ -3,32 +3,34 @@ import { Resource } from "sst";
 import { handler } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 const dynamoDb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-export const main = handler(async (event) => {
-	let data = {
-		content: "",
-		attachment: "",
-	};
+interface NoteData {
+	content: string;
+	attachment: string;
+}
 
-	if (event.body != null) {
-		data = JSON.parse(event.body);
-	}
+async function createNote(event: APIGatewayProxyEvent) {
+	const data: NoteData = event.body
+		? JSON.parse(event.body)
+		: { content: "", attachment: "" };
 
 	const params = {
 		TableName: Resource.Notes.name,
 		Item: {
-			// The attributes of the item to be created
-			userId: event.requestContext.authorizer?.iam.cognitoIdentity.identityId, // The id of the author
-			noteId: uuid.v1(), // A unique uuid
-			content: data.content, // Parsed from request body
-			attachment: data.attachment, // Parsed from request body
-			createdAt: Date.now(), // Current Unix timestamp
+			userId: event.requestContext.authorizer?.iam.cognitoIdentity.identityId,
+			noteId: uuid.v1(),
+			content: data.content,
+			attachment: data.attachment,
+			createdAt: Date.now(),
 		},
 	};
 
 	await dynamoDb.send(new PutCommand(params));
 
 	return JSON.stringify(params.Item);
-});
+}
+
+export const main = handler(createNote);
