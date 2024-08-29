@@ -1,5 +1,5 @@
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
+import { Util } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DeleteCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
@@ -20,4 +20,4 @@ async function deleteNote(event: APIGatewayProxyEvent) {
 	return JSON.stringify({ status: true });
 }
 
-export const main = handler(deleteNote);
+export const main = Util.handler(deleteNote);

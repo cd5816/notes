@@ -1,11 +1,12 @@
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
+import { Util } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { QueryCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
 const dynamoDb = DynamoDBDocumentClient.from(new DynamoDBClient({}));
 
-export const main = handler(async (event) => {
+async function getListOfNotes(event: APIGatewayProxyEvent) {
 	const params = {
 		TableName: Resource.Notes.name,
 		// 'KeyConditionExpression' defines the condition for the query
@@ -24,4 +25,6 @@ export const main = handler(async (event) => {
 
 	// Return the matching list of items in response body
 	return JSON.stringify(result.Items);
-});
+}
+
+export const main = Util.handler(getListOfNotes);

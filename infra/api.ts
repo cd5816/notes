@@ -19,3 +19,4 @@ api.route("POST /notes", "packages/functions/src/create.main");
 api.route("GET /notes/{id}", "packages/functions/src/get.main");
 api.route("PUT /notes/{id}", "packages/functions/src/update.main");
 api.route("DELETE /notes/{id}", "packages/functions/src/delete.main");
+api.route("POST /billing", "packages/functions/src/billing.main");

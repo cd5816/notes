@@ -1,5 +1,5 @@
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
+import { Util } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { UpdateCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayEvent } from "aws-lambda";
@@ -30,4 +30,4 @@ async function updateNote(event: APIGatewayEvent) {
 	return JSON.stringify({ status: true });
 }
 
-export const main = handler(updateNote);
+export const main = Util.handler(updateNote);

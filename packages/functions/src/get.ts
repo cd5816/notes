@@ -1,5 +1,5 @@
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
+import { Util } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { GetCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
@@ -23,4 +23,4 @@ async function getNote(event: APIGatewayProxyEvent) {
 	return JSON.stringify(result.Item);
 }
 
-export const main = handler(getNote);
+export const main = Util.handler(getNote);

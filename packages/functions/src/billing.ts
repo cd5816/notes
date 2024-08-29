@@ -1,11 +1,12 @@
 import Stripe from "stripe";
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
-import { compute } from "@notes/core/billing";
+import { Util } from "@notes/core/util";
+import { Billing } from "@notes/core/billing";
+import { APIGatewayProxyEvent } from "aws-lambda";
 
-export const main = handler(async (event) => {
+async function processStripeCharge(event: APIGatewayProxyEvent) {
 	const { storage, source } = JSON.parse(event.body || "{}");
-	const amount = compute(storage);
+	const amount = Billing.compute(storage);
 	const description = "Scratch charge";
 
 	const stripe = new Stripe(
@@ -22,4 +23,6 @@ export const main = handler(async (event) => {
 	});
 
 	return JSON.stringify({ status: true });
-});
+}
+
+export const main = Util.handler(processStripeCharge);

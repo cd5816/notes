@@ -1,6 +1,6 @@
 import * as uuid from "uuid";
 import { Resource } from "sst";
-import { handler } from "@notes/core/util";
+import { Util } from "@notes/core/util";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PutCommand, DynamoDBDocumentClient } from "@aws-sdk/lib-dynamodb";
 import { APIGatewayProxyEvent } from "aws-lambda";
@@ -33,4 +33,4 @@ async function createNote(event: APIGatewayProxyEvent) {
 	return JSON.stringify(params.Item);
 }
 
-export const main = handler(createNote);
+export const main = Util.handler(createNote);
